@@ -1,4 +1,5 @@
 import formidable from 'formidable';
+import { db } from '../../../lib/db';
 
 export const config = {
     api: {
@@ -18,5 +19,9 @@ export default  async (req, res) =>{
     console.log("Wallet address: ",address);
     console.log ("Amount: ", amount);
     console.log("Type: ",type);
-    res.status(200).json(data);
+
+    const wallet = await db.exec('select id from wallets where address = ?', [address]);
+    console.log("Wallet id: ",wallet.rows[0].id);
+    const deposit = db.exec('select id, user_id from deposits where wallet_address = ? and status = 2', [wallet.rows[0].id]);
+    res.status(200).json(deposit.rows[0]);
 }
