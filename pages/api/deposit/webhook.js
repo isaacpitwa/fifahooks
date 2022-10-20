@@ -13,7 +13,7 @@ export default  async (req, res) =>{
           resolve({ err, fields, files })
         }) 
       })
-    const { address,amount,type }  = data;
+    const { address,amount,type }  = data.fields;
     console.log("Webhook received!");
     console.log("Wallet address: ",address);
     console.log ("Amount: ", amount);
