@@ -7,7 +7,7 @@ export const config = {
 }
 export default  async (req, res) =>{
     const data = await new Promise((resolve, reject) => {
-        const form = new formidable();
+        const form = new formidable.IncomingForm();
         form.parse(req, (err, fields, files) => {
           if (err) reject({ err })
           resolve({ err, fields, files })
@@ -18,5 +18,5 @@ export default  async (req, res) =>{
     console.log("Wallet address: ",address);
     console.log ("Amount: ", amount);
     console.log("Type: ",type);
-    res.status(200).json(req.data);
+    res.status(200).json(data);
 }
