@@ -26,19 +26,27 @@ export default  async (req, res) =>{
             res.status(500).json({error: err, when:'Fetching Wallet'});
             console.log(err);
         } else {
-
+            console.log("Wallet found: ",results[0]);
             // Fetch Deposit Details
-            connection.query('SELECT `id`,`user_id`, `status` FROM  `deposits` WHERE `wallet_address` = ?  AND status = ? ORDER BY `created_at` DESC', [results[0].id , 2], function(err1, results2, fields2) {
+            connection.query('SELECT `id`,`user_id`, `final_amo`, `status` FROM  `deposits` WHERE `wallet_address` = ?  AND status = ? ORDER BY `created_at` DESC', [results[0].id , 2], function(err1, results2, fields2) {
                 if (err) {
                     res.status(500).json({error: err1, when: "fetching deposit details"});
                     console.log(err);
                 } else{
-                    res.status(200).json({status: "success", results: results1[0]});
-                    console.log(results1[0]);
+                    connection.query('UPDATE users set `balance` = ? WHERE id =?', [results2[0].final_amo, results2[0].user_id], function(err2, results3, fields3) {
+
+                        if (err2) {
+                            res.status(500).json({error: err2, when: "Updating  Users Balance"});
+                            console.log(err);
+                        } else {
+                            res.status(200).json({status: "success", results: results3[0]});
+                        }
+                    });
+
+                    console.log('Deposit Details',results2[0]);
                 }
 
             });
-            
             console.log(fields);
         }
        });
