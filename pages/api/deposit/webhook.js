@@ -1,6 +1,5 @@
 export default function handler(req, res) {
-    console.log(req.body);
-    const { address,amount,type} = req.body;
+    const { address,amount,type} = JSON.parse(req.body);
     console.log("Webhook received!");
     console.log("Wallet address: ",address);
     console.log ("Amount: ", amount);
