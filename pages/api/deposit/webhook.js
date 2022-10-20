@@ -33,22 +33,31 @@ export default  async (req, res) =>{
                     res.status(500).json({error: err1, when: "fetching deposit details"});
                     console.log(err);
                 } else{
-                    connection.query('UPDATE `users` SET `balance` += ? WHERE `id` = ?', [amount, results2[0].user_id], function(err2, results3, fields3) {
+                    connection.query('UPDATE `users` SET `balance` = `balance` + ? WHERE `id` = ?', [amount, results2[0].user_id], function(err2, results3, fields3) {
 
                         if (err2) {
                             res.status(500).json({error: err2, when: "Updating  Users Balance"});
                             console.log(err);
                         } else {
+                            connection.query('UPDATE `wallets` SET `status` = ? WHERE `id` = ?', [0, results[0].id], function(err5, results5, fields5) {
+
+                                if (err5) {
+                                    console.log({error: err5, when: "Updating  Wallet Status"});
+                                } else {
+                                    console.log('Successfully Released wallet');
+                                }
+                            });
 
                             connection.query('UPDATE `deposits` SET `status` = ? WHERE `id` = ?', [1, results2[0].id], function(err3, results4, fields4) {
 
-                                if (err2) {
-                                    res.status(500).json({error: err2, when: "Updating  Deposit"});
+                                if (err3) {
+                                    res.status(500).json({error: err3, when: "Updating  Deposit"});
                                     console.log(err);
                                 } else {
-                                    res.status(200).json({status: "success", results: results4[0]});
+                                    res.status(200).json({status: "success Updating  Deposit And User Balance ", results: results4[0]});
                                 }
                             });
+
 
                         }
                     });
