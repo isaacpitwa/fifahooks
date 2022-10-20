@@ -33,13 +33,23 @@ export default  async (req, res) =>{
                     res.status(500).json({error: err1, when: "fetching deposit details"});
                     console.log(err);
                 } else{
-                    connection.query('UPDATE users set `balance` = ? WHERE id =?', [results2[0].final_amo, results2[0].user_id], function(err2, results3, fields3) {
+                    connection.query('UPDATE `users` SET `balance` += ? WHERE `id` = ?', [amount, results2[0].user_id], function(err2, results3, fields3) {
 
                         if (err2) {
                             res.status(500).json({error: err2, when: "Updating  Users Balance"});
                             console.log(err);
                         } else {
-                            res.status(200).json({status: "success", results: results3[0]});
+
+                            connection.query('UPDATE `deposits` SET `status` = ? WHERE `id` = ?', [1, results2[0].id], function(err3, results4, fields4) {
+
+                                if (err2) {
+                                    res.status(500).json({error: err2, when: "Updating  Deposit"});
+                                    console.log(err);
+                                } else {
+                                    res.status(200).json({status: "success", results: results4[0]});
+                                }
+                            });
+
                         }
                     });
 
