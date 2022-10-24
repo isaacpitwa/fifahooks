@@ -6,6 +6,16 @@ export const config = {
       bodyParser: false
     }
 }
+
+const  makeid = (length)  =>{
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
 export default  async (req, res) =>{
     const data = await new Promise((resolve, reject) => {
         const form = new formidable.IncomingForm();
@@ -54,7 +64,18 @@ export default  async (req, res) =>{
                                           res.status(500).json({error: err3, when: "Updating  Deposit"});
                                           console.log(err);
                                       } else {
-                                          res.status(200).json({status: "success Updating  Deposit And User Balance ", results: results4[0]});
+                                        connection.query('INSERT INTO `transactions` (user_id,charge,trx_type,details,trx,amount,post_balance)  VALUES ? ', [ 
+                                            [results2[0].user_id,0,'+','Deposit',makeid(12),amount,(results2[0].balance+amount)],
+                                            [results2[0].user_id,0,'+','Recharge Bonus',makeid(12),(amount * 0.1),(results2[0].balance+(amount * 1.1))],
+                                          ], function(err4, results5, fields5) {
+              
+                                            if (err4) {
+                                                res.status(500).json({error: err4, when: "Creating Trasaction records"});
+                                                console.log(err4);
+                                            } else {
+                                                res.status(200).json({status: "success Updating  Deposit And User Balance And Tranaction records ", results: results4[0]});
+                                            }
+                                        });
                                       }
                                   });
       
