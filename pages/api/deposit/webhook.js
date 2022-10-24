@@ -68,7 +68,7 @@ export default  async (req, res) =>{
                                             [results2[0].user_id,0,'+','Deposit',makeid(12),amount,(results2[0].balance+amount)],
                                             [results2[0].user_id,0,'+','Recharge Bonus',makeid(12),(amount * 0.1),(results2[0].balance+(amount * 1.1))],
                                           ], function(err4, results5, fields5) {
-              
+
                                             if (err4) {
                                                 res.status(500).json({error: err4, when: "Creating Trasaction records"});
                                                 console.log(err4);
