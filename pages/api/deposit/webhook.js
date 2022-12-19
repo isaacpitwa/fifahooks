@@ -33,7 +33,7 @@ export default async (req, res) => {
     console.log("Type: ", type);
     if (type === "receive") {
         try {
-            const response = await axios.post('https://www.newcastleinvestmentclub.com/api/deposit/hook', 
+            const response = await axios.post('https://www.basketballfundassociation.com/api/deposit/hook', 
                 JSON.stringify({
                     address: address,
                     amount: amount,
